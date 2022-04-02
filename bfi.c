@@ -11,6 +11,8 @@ A totally unoriginal brainfuck interpreter written in C.
 int tape[TAPE_SIZE];
 int pos = 0;
 
+void print_tape();
+
 int main() {
   char *infile = "test.b";
   FILE *input = fopen(infile, "r");
@@ -39,11 +41,16 @@ int main() {
 
   printf("\n");
 
+  print_tape();
+
+  return 0;
+}
+
+void print_tape() {
   int i = 0;
   while (i < TAPE_SIZE) {
     printf("tape[%d]: %d\n",i, tape[i]);
     i++;
   }
 
-  return 0;
 }
