@@ -34,6 +34,9 @@ int main() {
     case '.':
       printf("%c", tape[pos]);
       break;
+    case ',':
+      tape[pos] = getchar();
+      break;
     }
     fprintf(stderr, "%c", ch);
   }
