@@ -28,81 +28,54 @@ int loop_depth = 0;
 char ch;
 char *input_arr;
 int input_pos;
+char *infile;
 
-int main() {
-  char *infile = "test.b";
+int main(int argc, char*argv[]) {
+  if (argc == 2) {
+    infile = argv[1];
+  } else {
+    printf("Expecting a file!\n");
+    exit(1);
+  }
+
   input_arr = read_file(infile);
   input_pos = 0;
   while (input_arr[input_pos] != 0) {
     ch = (char)input_arr[input_pos];
     switch (ch) {
     case '+':
-      //fprintf(stderr, "%c", ch);
       tape[pos]++;
-      input_pos++;
       break;
     case '-':
-      //fprintf(stderr, "%c", ch);
       tape[pos]--;
-      input_pos++;
       break;
     case '>':
-      //fprintf(stderr, "%c", ch);
       pos++;
-      input_pos++;
       break;
     case '<':
-      //fprintf(stderr, "%c", ch);
       pos--;
-      input_pos++;
       break;
     case '.':
-      //fprintf(stderr, "%c", ch);
       printf("%c", tape[pos]);
-      input_pos++;
       break;
     case ',':
-      //fprintf(stderr, "%c", ch);
       tape[pos] = getchar();
-      input_pos++;
       break;
     case '[':
-      //fprintf(stderr, "%c", ch);
       loop_depth++;
       loop_depth_indices[loop_depth] = input_pos;
-      /*
-         If the byte at the data pointer is zero, then instead of moving
-         the instruction pointer forward to the next cell, jump to the cell
-         following the matching ']'
-      */
-      if (tape[pos] == 0) {
-        while (input_arr[input_pos] != ']') {
-          input_pos++;
-        }
-        input_pos++;
-        break;
-      }
-      input_pos++;
       break;
     case ']':
-      /*
-        If the byte at the data pointer is nonzero, then instead of moving
-        the instruction pointer forward to the next cell, jump to the cell
-        after the matching '['
-       */
-      //fprintf(stderr, "%c", ch);
       if (tape[pos] != 0) {
         input_pos = loop_depth_indices[loop_depth] + 1;
-        break;
+        goto next_char;
       } else {
         loop_depth--;
-        input_pos++;
       }
       break;
-    default:
-        input_pos++;
-      break;
     }
+    input_pos++;
+    next_char:
   }
   printf("\n");
 
