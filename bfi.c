@@ -6,13 +6,20 @@ A totally unoriginal brainfuck interpreter written in C.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void print_tape();
+void interpret(char *input_arr);
+void repl();
+void reset_tape();
 char *read_file(char *file_path);
 
 #define TAPE_SIZE 10
 int tape[TAPE_SIZE];
 int pos = 0;
+
+#define REPL_SIZE 1000
+char repl_buff[REPL_SIZE];
 
 /*
   This array controls how deep loops can be in the program -
@@ -23,21 +30,45 @@ int pos = 0;
 int loop_depth_indices[500];
 int loop_depth = 0;
 
-char ch;
-char *input_arr;
-int input_pos;
-char *infile;
-
 int main(int argc, char*argv[]) {
+  char *input_arr;
   if (argc == 2) {
-    infile = argv[1];
+    input_arr = read_file(argv[1]);
+    reset_tape();
+    interpret(input_arr);
+    print_tape();
+    return 0;
   } else {
-    printf("Expecting a file!\n");
-    exit(1);
+    repl();
   }
+  return 0;
+}
 
-  input_arr = read_file(infile);
-  input_pos = 0;
+void prompt_read() {
+  printf("# ");
+  fflush(stdout);
+  memset(repl_buff, 0, sizeof(repl_buff));
+  fgets(repl_buff, sizeof(repl_buff), stdin);
+}
+
+void repl(){
+  printf("[REPL] Type q to quit!\n");
+  while(1) {
+    prompt_read();
+    if (repl_buff[0] == 'q') {
+      return;
+    } else  {
+      repl_buff[strlen(repl_buff)-1] = '\0';
+      /* reset_tape(); */
+      interpret(repl_buff);
+      print_tape();
+    }
+  }
+}
+
+void interpret(char *input_arr) {
+  char ch;
+  int input_pos = 0;
   while (input_arr[input_pos] != 0) {
     next_char:
     ch = (char)input_arr[input_pos];
@@ -76,11 +107,9 @@ int main(int argc, char*argv[]) {
     input_pos++;
   }
   printf("\n");
-
-  print_tape();
-
-  return 0;
 }
+
+void reset_tape() { memset(tape, 0, sizeof(tape)); pos = 0; }
 
 char *read_file(char *file_path) {
   char *buffer;
