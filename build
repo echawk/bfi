@@ -1,0 +1,3 @@
+#!/bin/sh
+
+${CC:-cc} $CFLAGS -Wall -pedantic bfi.c -o bfi
