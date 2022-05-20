@@ -128,6 +128,7 @@ char *read_file(char *file_path) {
 void print_tape() {
   int i;
   for (i = 0; i < TAPE_SIZE; i++) {
-    printf("tape[%d]: %d\n", i, tape[i]);
+    if (tape[i] != 0)
+      printf("tape[%d]: %d\n", i, tape[i]);
   }
 }
