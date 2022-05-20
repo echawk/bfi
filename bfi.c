@@ -14,7 +14,7 @@ void repl();
 void reset_tape();
 char *read_file(char *file_path);
 
-#define TAPE_SIZE 10
+#define TAPE_SIZE 1000
 int tape[TAPE_SIZE];
 int pos = 0;
 
